@@ -24,7 +24,7 @@ def train(args, train_dl, PreTrainModel, FNR2R, g_optim, device):
     pbar = tqdm(pbar, initial=args.start_iter, dynamic_ncols=True, smoothing=0.01)
     CosLoss = nn.CosineSimilarity(dim=1, eps=1e-6).to(device)
 
-    savepath = '/home/xteam/PaperCode/MM_IJCV/TIP/06_results/TIP_P2/' + args.exp_name
+    savepath = './' + args.exp_name
     weight_path = savepath + '/'
     logPathcodes = weight_path + 'codes' + '/'
     imgsPath = weight_path + 'imgs' + '/'
@@ -74,7 +74,7 @@ def train(args, train_dl, PreTrainModel, FNR2R, g_optim, device):
         if i % 5000 == 0 and i!=0:
             torch.save({"model": FNR2R.state_dict()}, f"%s/{str(i).zfill(6)}.pt"%(expPath))
             
-        if i>350010:
+        if i>150010:
             break 
 
 
@@ -89,11 +89,11 @@ if __name__ == "__main__":
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--imgSize", type=int, default=256)
     # parser.add_argument("--p2ckpt", type=str, default=None)
-    parser.add_argument("--p2ckpt", type=str, default="/home/xteam/PaperCode/MM_IJCV/TIP/06_results/TIP_P2/RR/exp/p2_ckpt_150.pt")
-    parser.add_argument("--p1ckpt", type=str, default="/home/xteam/PaperCode/MM_IJCV/TIP/06_results/TIP_P2/RR/exp/p1_ckpt_150.pkl")
+    parser.add_argument("--p2ckpt", type=str, default="./exp/p2_ckpt_150.pt")
+    parser.add_argument("--p1ckpt", type=str, default="./p1_ckpt_200.pkl")
 
     parser.add_argument("--lr", type=float, default=0.0001)
-    parser.add_argument("--exp_name", type=str, default="RR")
+    parser.add_argument("--exp_name", type=str, default="FNR2R")
     parser.add_argument("--gpuID", type=int, default=1)
 
 
@@ -116,7 +116,7 @@ if __name__ == "__main__":
         p2ckpt_name = os.path.basename(args.p2ckpt)
         FNR2R.load_state_dict(p2ckpt["model"])
 
-    pathd = '/home/xteam/PaperCode/data_zoo/NormalPredict/23_ph_300w_ffhq.csv'
+    pathd = './inputs/train_images_p2.csv'  #csv file with training images
     train_dataset, _ = getTrainDataP2(csvPath=pathd, imgSize=args.imgSize, validation_split=0)
     train_dl  = DataLoader(train_dataset, batch_size=args.batch, shuffle=True, num_workers=8)
         
