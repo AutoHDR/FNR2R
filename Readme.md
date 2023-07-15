@@ -1,11 +1,13 @@
 
-# Coarse-to-fine-face-normal
-This repository contains an implementation for the paper "Coarse-to-Fine Face Normal Estimation".
+# FNR2R
+This repository contains an implementation for the paper "Face Normal Estimation from Rags to Riches".
 
-The paper propose a coarse-to-fine framework that can effectively predict normals from face images in-the-wild. More concretely, we first build a model using limited training data to obtain a coarse (low-quality) normal map of a real face image.
 
-<center><img src="results/r1.jpg" width="100%"></center>
-From top to bottom are the input face, predicted albedo, predicted shading, visualized light and predicted normal.
+Although recent approaches to face normal estimation have achieved promising results, their effectiveness heavily depends on large-scale paired data for training. This paper concentrates on relieving this requirement via developing a coarse-to-fine normal estimator. Concretely, our method first trains a neat model from a small dataset to produce coarse face normals that perform as guidance (called exemplars) for the following refinement. A self-attention mechanism is employed to capture long-range dependencies, thus remedying severe local artifacts left in estimated coarse facial normals. Then, a refinement network is customized for the sake of mapping input face images together with corresponding exemplars to fine-grained high-quality facial normals. Such a logical function split can significantly cut the requirement of massive paired data and computational resource. 
+
+
+<center><img src="results/vis.png" width="100%"></center>
+From top to bottom are the input face, exemplar and refinement normal.
 
 
 ## Usage
@@ -13,10 +15,6 @@ From top to bottom are the input face, predicted albedo, predicted shading, visu
 #### Training data: 
 * [Photoface data](https://uwe-repository.worktribe.com/output/972508)
 
-For coarse prediction network training run:
-```
-python coarse_stage/train.py 
-```
 
 ### Refined network training
 #### Training data: 
@@ -29,7 +27,6 @@ For normal refinement network training run:
 ```
 python main_s2_train.py 
 ```
-
 
 ### Testing
 #### Download checkpoints: 
